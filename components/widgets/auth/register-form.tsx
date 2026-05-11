@@ -14,8 +14,8 @@ import { Button } from "@/components/shared/ui/button";
 import { Label } from "@/components/shared/ui/label";
 import { AuthInputWithIcon } from "@/components/widgets/auth/auth-input-with-icon";
 import { AuthOauthDivider } from "@/components/widgets/auth/auth-oauth-divider";
-import { registerRequest, setStoredToken } from "@/lib/auth";
-import { AUTH_LOGIN } from "@/lib/navigation/routes";
+import { signInWithGoogle, signUpWithEmailPassword, useAuthUrlError } from "@/lib/auth";
+import { AUTH_LOGIN, AUTH_REGISTER } from "@/lib/navigation/routes";
 
 const registerSchema = z
   .object({
@@ -34,6 +34,10 @@ type RegisterValues = z.infer<typeof registerSchema>;
 export function RegisterFormWidget() {
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [confirmEmailHint, setConfirmEmailHint] = useState<string | null>(null);
+
+  useAuthUrlError(setFormError);
 
   const {
     register,
@@ -46,20 +50,37 @@ export function RegisterFormWidget() {
 
   const onSubmit = handleSubmit(async (data) => {
     setFormError(null);
-    const values = {
-      email: data.email,
-      full_name: data.full_name,
-      password: data.password,
-    };
+    setConfirmEmailHint(null);
     try {
-      const res = await registerRequest(values);
-      setStoredToken(res.access_token);
+      const { needsEmailConfirmation } = await signUpWithEmailPassword(
+        data.email,
+        data.password,
+        data.full_name,
+      );
+      if (needsEmailConfirmation) {
+        setConfirmEmailHint(
+          "Мы отправили письмо с подтверждением. Перейдите по ссылке из email, затем войдите.",
+        );
+        return;
+      }
       router.push("/");
       router.refresh();
     } catch (e) {
       setFormError(e instanceof Error ? e.message : "Не удалось зарегистрироваться");
     }
   });
+
+  const handleGoogle = async () => {
+    setFormError(null);
+    setConfirmEmailHint(null);
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle({ errorReturnPath: AUTH_REGISTER, successNext: "/" });
+    } catch (e) {
+      setFormError(e instanceof Error ? e.message : "Не удалось войти через Google");
+      setGoogleLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -72,7 +93,11 @@ export function RegisterFormWidget() {
         </p>
       </header>
 
-      <AuthOauthDivider label="или по email" />
+      <AuthOauthDivider
+        label="или по email"
+        onGoogle={handleGoogle}
+        googleLoading={googleLoading}
+      />
 
       <form className="space-y-5" onSubmit={onSubmit} noValidate>
         <div className="space-y-2">
@@ -115,6 +140,7 @@ export function RegisterFormWidget() {
             id="reg-password"
             icon={<Lock />}
             type="password"
+            showPasswordToggle
             autoComplete="new-password"
             placeholder="Минимум 8 символов"
             aria-invalid={Boolean(errors.password)}
@@ -132,6 +158,7 @@ export function RegisterFormWidget() {
             id="reg-password2"
             icon={<Lock />}
             type="password"
+            showPasswordToggle
             autoComplete="new-password"
             placeholder="Повторите пароль"
             aria-invalid={Boolean(errors.confirmPassword)}
@@ -149,6 +176,15 @@ export function RegisterFormWidget() {
             className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
           >
             {formError}
+          </div>
+        ) : null}
+
+        {confirmEmailHint ? (
+          <div
+            role="status"
+            className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-sm text-foreground"
+          >
+            {confirmEmailHint}
           </div>
         ) : null}
 

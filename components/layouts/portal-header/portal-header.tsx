@@ -6,10 +6,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import {
-  clearStoredToken,
-  getTokenSnapshot,
-  readJwtSubjectInitial,
-  subscribeTokenChanges,
+  getAuthBrowserServerSnapshotString,
+  getAuthBrowserSnapshotString,
+  parseAuthBrowserSnapshotString,
+  signOutClient,
+  subscribeAuthBrowserState,
 } from "@/lib/auth";
 import { PORTAL_NAV } from "@/lib/navigation/routes";
 import { cn } from "@/lib/utils";
@@ -19,17 +20,25 @@ const showMasterNav = process.env.NEXT_PUBLIC_SHOW_MASTER_NAV === "true";
 export function PortalHeader() {
   const pathname = usePathname();
   const router = useRouter();
-  const token = useSyncExternalStore(subscribeTokenChanges, getTokenSnapshot, () => "");
-  const hasToken = Boolean(token);
-  const avatarLetter = token ? readJwtSubjectInitial(token) : "?";
+  const authRaw = useSyncExternalStore(
+    subscribeAuthBrowserState,
+    getAuthBrowserSnapshotString,
+    getAuthBrowserServerSnapshotString,
+  );
+  const auth = parseAuthBrowserSnapshotString(authRaw);
+  const hasSession = auth.status === "signedIn";
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
 
-  const handleLogout = () => {
-    clearStoredToken();
+  const handleLogout = async () => {
+    try {
+      await signOutClient();
+    } catch {
+      /* всё равно уходим на форму входа */
+    }
     router.push("/auth");
     router.refresh();
   };
@@ -60,7 +69,7 @@ export function PortalHeader() {
             className="flex items-center gap-2 border border-transparent px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition hover:border-primary/40 hover:bg-primary/5 hover:text-foreground"
           >
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 text-[11px] font-bold text-primary">
-              {avatarLetter}
+              {auth.avatarLetter}
             </span>
             <span className="hidden sm:inline">Профиль</span>
           </Link>
@@ -74,10 +83,10 @@ export function PortalHeader() {
             </Link>
           ) : null}
 
-          {hasToken ? (
+          {hasSession ? (
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={() => void handleLogout()}
               className="border border-border px-3 py-2 text-[11px] uppercase tracking-wider text-muted-foreground transition hover:border-destructive/50 hover:text-destructive"
             >
               Выйти

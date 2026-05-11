@@ -14,7 +14,7 @@ import { Button } from "@/components/shared/ui/button";
 import { Label } from "@/components/shared/ui/label";
 import { AuthInputWithIcon } from "@/components/widgets/auth/auth-input-with-icon";
 import { AuthOauthDivider } from "@/components/widgets/auth/auth-oauth-divider";
-import { loginRequest, setStoredToken } from "@/lib/auth";
+import { signInWithEmailPassword, signInWithGoogle, useAuthUrlError } from "@/lib/auth";
 import { AUTH_REGISTER } from "@/lib/navigation/routes";
 
 const loginSchema = z.object({
@@ -27,6 +27,9 @@ type LoginValues = z.infer<typeof loginSchema>;
 export function LoginFormWidget() {
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  useAuthUrlError(setFormError);
 
   const {
     register,
@@ -40,14 +43,24 @@ export function LoginFormWidget() {
   const onSubmit = handleSubmit(async (values) => {
     setFormError(null);
     try {
-      const res = await loginRequest(values);
-      setStoredToken(res.access_token);
+      await signInWithEmailPassword(values.email, values.password);
       router.push("/");
       router.refresh();
     } catch (e) {
       setFormError(e instanceof Error ? e.message : "Не удалось войти");
     }
   });
+
+  const handleGoogle = async () => {
+    setFormError(null);
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle({ errorReturnPath: "/auth", successNext: "/" });
+    } catch (e) {
+      setFormError(e instanceof Error ? e.message : "Не удалось войти через Google");
+      setGoogleLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -58,7 +71,11 @@ export function LoginFormWidget() {
         <p className="text-sm text-muted-foreground">Введите данные, чтобы войти в аккаунт.</p>
       </header>
 
-      <AuthOauthDivider label="или войти по email" />
+      <AuthOauthDivider
+        label="или войти по email"
+        onGoogle={handleGoogle}
+        googleLoading={googleLoading}
+      />
 
       <form className="space-y-5" onSubmit={onSubmit} noValidate>
         <div className="space-y-2">
@@ -87,6 +104,7 @@ export function LoginFormWidget() {
             id="login-password"
             icon={<Lock />}
             type="password"
+            showPasswordToggle
             autoComplete="current-password"
             placeholder="••••••••"
             aria-invalid={Boolean(errors.password)}

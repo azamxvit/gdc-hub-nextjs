@@ -13,6 +13,7 @@
 - **Паттерн данных (зафиксировано владельцем):** `public.users` — **зеркало** `auth.users` (id, email, публичные поля). Триггер на `auth.users` создаёт строку в `public.users` и связанные игровые сущности. Фронт и RLS опираются на **`public.users`**, а не на прямые FK только к `auth.users` в игровых таблицах без этого слоя — **не предлагать** ломать эту модель без явной просьбы.
 - **Legacy:** FastAPI монолит `gdc_portal` (отдельный репозиторий). Опционально `NEXT_PUBLIC_API_BASE_URL` для старых эндпоинтов; целевая схема — Supabase + точечный Python-воркер.
 - Клиенты Supabase: `lib/supabase/` (browser, server, middleware refresh). Секреты **никогда** в `NEXT_PUBLIC_*`.
+- **Вход:** email/пароль и **Google OAuth** (`signInWithGoogle({ successNext, errorReturnPath })`); callback `app/auth/callback/route.ts` обрабатывает `code`, а также `error` / `error_description` без `code`, редиректит на `error_to?error=` (по умолчанию `/auth` или `/auth/register`). В Dashboard: **Google provider**, **Redirect URLs** с `/auth/callback`.
 
 ## Стили и тема
 - Токены в `app/globals.css`; портал-оверлей в `app/styles/portal.css`.

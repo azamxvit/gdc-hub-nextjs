@@ -27,20 +27,29 @@ function GoogleGlyph({ className }: { className?: string }) {
 
 type AuthOauthDividerProps = {
   label?: string;
+  onGoogle?: () => void | Promise<void>;
+  googleLoading?: boolean;
 };
 
-export function AuthOauthDivider({ label = "или войти по email" }: AuthOauthDividerProps) {
+export function AuthOauthDivider({
+  label = "или войти по email",
+  onGoogle,
+  googleLoading = false,
+}: AuthOauthDividerProps) {
+  const googleEnabled = Boolean(onGoogle);
+
   return (
     <div className="space-y-4">
       <Button
         type="button"
         variant="outline"
         className="h-11 w-full gap-2 border-border/80 bg-background/40 font-medium text-foreground hover:bg-muted/60"
-        disabled
-        title="Скоро: OAuth"
+        disabled={!googleEnabled || googleLoading}
+        onClick={() => void onGoogle?.()}
+        title={googleEnabled ? "Вход через Google" : "Настройте Supabase в .env.local"}
       >
         <GoogleGlyph className="size-4 shrink-0 opacity-90" />
-        Продолжить с Google
+        {googleLoading ? "Переход к Google…" : "Продолжить с Google"}
       </Button>
       <div className="relative flex items-center justify-center gap-3">
         <span className="h-px flex-1 bg-border" aria-hidden />
