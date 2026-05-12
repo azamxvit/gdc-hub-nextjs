@@ -2,7 +2,11 @@
 
 import { useEffect } from "react";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+
+import { useTranslations } from "next-intl";
+
+import { usePathname, useRouter } from "@/i18n/navigation";
 
 const ERROR_PARAM = "error";
 
@@ -11,6 +15,7 @@ export function useAuthUrlError(setMessage: (msg: string | null) => void) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations("errors");
 
   useEffect(() => {
     const encoded = searchParams.get(ERROR_PARAM);
@@ -18,11 +23,11 @@ export function useAuthUrlError(setMessage: (msg: string | null) => void) {
     try {
       setMessage(decodeURIComponent(encoded.replace(/\+/g, " ")));
     } catch {
-      setMessage("Не удалось войти. Попробуйте ещё раз.");
+      setMessage(t("urlDecode"));
     }
     const next = new URLSearchParams(searchParams.toString());
     next.delete(ERROR_PARAM);
     const qs = next.toString();
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-  }, [pathname, router, searchParams, setMessage]);
+  }, [pathname, router, searchParams, setMessage, t]);
 }

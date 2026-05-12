@@ -8,7 +8,17 @@ import {
   CardTitle,
 } from "@/components/shared/ui/card";
 
-export function TavernFeedPlaceholder() {
+type TavernFeedPlaceholderProps = {
+  title: string;
+  description: string;
+  emptyHint: string;
+};
+
+export function TavernFeedPlaceholder({
+  title,
+  description,
+  emptyHint,
+}: TavernFeedPlaceholderProps) {
   return (
     <section data-widget="tavern-feed" className="mx-auto max-w-3xl px-6 py-12">
       <Card className="portal-bevel-border border-border/70 bg-card/60 shadow-[0_0_0_1px_color-mix(in_oklch,var(--primary)_12%,transparent)]">
@@ -19,18 +29,15 @@ export function TavernFeedPlaceholder() {
             </span>
             <div>
               <CardTitle className="font-heading text-lg uppercase tracking-[0.12em]">
-                Лента скоро оживёт
+                {title}
               </CardTitle>
-              <CardDescription>
-                Переносим посты и вложения из legacy gdc_frontend → Next.js. API остаётся на
-                FastAPI.
-              </CardDescription>
+              <CardDescription>{description}</CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <div className="rounded-lg border border-dashed border-border/80 bg-muted/20 px-4 py-10 text-center text-sm text-muted-foreground">
-            Пустой таймлайн — заглушка для вёрстки и навигации.
+            {emptyHint}
           </div>
         </CardContent>
       </Card>

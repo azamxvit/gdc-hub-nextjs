@@ -101,10 +101,9 @@
   --popover: oklch(0.14 0.03 285);
   --popover-foreground: oklch(0.96 0.015 95);
   /*
-    Тёмная тема: тот же розовый оттенок, но выше светлота и чуть ниже хрома —
-    читается как «неон» на графите без кислотной пересветки (#E91E63 → ~#F4719C).
+    Тёмная тема: розовый неон чуть светлее для читаемости на графите.
   */
-  --primary: oklch(0.71 0.19 12.09);
+  --primary: oklch(0.76 0.185 12.09);
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.22 0.045 285);
   --secondary-foreground: oklch(0.94 0.02 95);
@@ -115,20 +114,20 @@
   --destructive: oklch(0.55 0.22 25);
   --border: oklch(0.28 0.035 285);
   --input: oklch(0.24 0.04 285);
-  --ring: oklch(0.71 0.19 12.09);
-  --chart-1: oklch(0.71 0.19 12.09);
+  --ring: oklch(0.76 0.185 12.09);
+  --chart-1: oklch(0.76 0.185 12.09);
   --chart-2: oklch(0.65 0.14 195);
   --chart-3: oklch(0.62 0.13 285);
   --chart-4: oklch(0.45 0.08 285);
   --chart-5: oklch(0.35 0.05 285);
   --sidebar: oklch(0.13 0.03 285);
   --sidebar-foreground: oklch(0.96 0.015 95);
-  --sidebar-primary: oklch(0.71 0.19 12.09);
+  --sidebar-primary: oklch(0.76 0.185 12.09);
   --sidebar-primary-foreground: oklch(0.99 0 0);
   --sidebar-accent: oklch(0.22 0.045 285);
   --sidebar-accent-foreground: oklch(0.96 0.015 95);
   --sidebar-border: oklch(0.28 0.035 285);
-  --sidebar-ring: oklch(0.71 0.19 12.09);
+  --sidebar-ring: oklch(0.76 0.185 12.09);
 }
 
 @layer base {

@@ -1,0 +1,12 @@
+{
+  "invalidEmail": "Invalid email",
+  "passwordRequired": "Enter password",
+  "fullNameMin": "Enter full name",
+  "passwordMin": "At least 8 characters",
+  "confirmPasswordRequired": "Confirm password",
+  "passwordMismatch": "Passwords do not match",
+  "genericLogin": "Could not sign in",
+  "genericGoogle": "Could not sign in with Google",
+  "genericRegister": "Could not register",
+  "urlDecode": "Could not sign in. Please try again."
+}

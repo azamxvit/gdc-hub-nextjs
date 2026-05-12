@@ -1,0 +1,21 @@
+{
+  "brand": {
+    "title": "GDC Hub",
+    "subtitle": "Резидентский портал"
+  },
+  "header": {
+    "profile": "Профиль",
+    "master": "Мастер",
+    "logout": "Выйти",
+    "login": "Вход"
+  },
+  "footer": {
+    "copyright": "© {year} GDC Hub"
+  },
+  "locale": {
+    "label": "Язык",
+    "en": "English",
+    "kz": "Қазақша",
+    "ru": "Русский"
+  }
+}

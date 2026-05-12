@@ -14,7 +14,9 @@ export {
   signInWithGoogle,
   signOutClient,
   signUpWithEmailPassword,
+  updatePasswordForCurrentUser,
 } from "./supabase-client-auth";
+export { hasEmailPasswordIdentity, hasGoogleIdentity } from "./password-identities";
 export type { SignInWithGoogleOptions } from "./supabase-client-auth";
 export { useAuthUrlError } from "./use-auth-url-error";
 export { readJwtSubjectInitial } from "./jwt-display";

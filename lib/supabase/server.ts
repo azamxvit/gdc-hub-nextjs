@@ -4,9 +4,6 @@ import { createServerClient } from "@supabase/ssr";
 
 import { getSupabasePublishableKey, getSupabaseUrl } from "@/lib/config/env";
 
-/**
- * Серверный клиент с сессией из cookies (после refresh в middleware).
- */
 export async function createSupabaseServerClient() {
   const url = getSupabaseUrl();
   const key = getSupabasePublishableKey();
@@ -26,9 +23,7 @@ export async function createSupabaseServerClient() {
       setAll(cookiesToSet) {
         try {
           cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-        } catch {
-          /* set из Server Component без возможности записи cookie — обновит middleware */
-        }
+        } catch {}
       },
     },
   });

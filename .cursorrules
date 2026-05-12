@@ -14,6 +14,8 @@
 - **Legacy:** FastAPI монолит `gdc_portal` (отдельный репозиторий). Опционально `NEXT_PUBLIC_API_BASE_URL` для старых эндпоинтов; целевая схема — Supabase + точечный Python-воркер.
 - Клиенты Supabase: `lib/supabase/` (browser, server, middleware refresh). Секреты **никогда** в `NEXT_PUBLIC_*`.
 - **Вход:** email/пароль и **Google OAuth** (`signInWithGoogle({ successNext, errorReturnPath })`); callback `app/auth/callback/route.ts` обрабатывает `code`, а также `error` / `error_description` без `code`, редиректит на `error_to?error=` (по умолчанию `/auth` или `/auth/register`). В Dashboard: **Google provider**, **Redirect URLs** с `/auth/callback`.
+- **Пароль после Google:** на **`/profile`** блок «Вход по паролю» — `updatePasswordForCurrentUser` → пользователь может задать пароль и дальше входить через **`/auth`** по email. Это не настраивается SQL — только Supabase Auth + UI.
+- **Экран Google «Переход в приложение …supabase.co»:** при дефолтных ключах Supabase Google показывает хост проекта. Чтобы было **«GDC Hub»**: Google Cloud Console → **OAuth consent screen** → название приложения; создать **OAuth 2.0 Client ID** (Web), в **Authorized redirect URIs** добавить `https://<project-ref>.supabase.co/auth/v1/callback`; в Supabase → **Auth → Providers → Google** включить **свои** Client ID и Secret (не дефолтные ключи провайдера).
 
 ## Стили и тема
 - Токены в `app/globals.css`; портал-оверлей в `app/styles/portal.css`.

@@ -41,6 +41,13 @@ export async function signOutClient(): Promise<void> {
   if (error) throw new Error(mapAuthError(error));
 }
 
+/** Установить или сменить пароль у текущей сессии (в т.ч. после входа только через Google). */
+export async function updatePasswordForCurrentUser(password: string): Promise<void> {
+  const supabase = getClient();
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) throw new Error(mapAuthError(error));
+}
+
 export type SignInWithGoogleOptions = {
   /** Куда редиректнуть после успешного OAuth (только внутренний путь). */
   successNext?: string;

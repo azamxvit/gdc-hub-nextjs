@@ -1,0 +1,12 @@
+{
+  "invalidEmail": "Жарамсыз email",
+  "passwordRequired": "Құпия сөзді енгізіңіз",
+  "fullNameMin": "ТАӘ көрсетіңіз",
+  "passwordMin": "Кемінде 8 таңба",
+  "confirmPasswordRequired": "Құпия сөзді растаңыз",
+  "passwordMismatch": "Құпия сөздер сәйкес емес",
+  "genericLogin": "Кіру мүмкін болмады",
+  "genericGoogle": "Google арқылы кіру мүмкін болмады",
+  "genericRegister": "Тіркелу мүмкін болмады",
+  "urlDecode": "Кіру мүмкін болмады. Қайта көріңіз."
+}

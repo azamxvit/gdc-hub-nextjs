@@ -1,0 +1,12 @@
+{
+  "invalidEmail": "Некорректный email",
+  "passwordRequired": "Введите пароль",
+  "fullNameMin": "Укажите ФИО",
+  "passwordMin": "Минимум 8 символов",
+  "confirmPasswordRequired": "Подтвердите пароль",
+  "passwordMismatch": "Пароли не совпадают",
+  "genericLogin": "Не удалось войти",
+  "genericGoogle": "Не удалось войти через Google",
+  "genericRegister": "Не удалось зарегистрироваться",
+  "urlDecode": "Не удалось войти. Попробуйте ещё раз."
+}

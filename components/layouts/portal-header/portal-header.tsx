@@ -2,9 +2,10 @@
 
 import { useSyncExternalStore } from "react";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
+import { LocaleSwitcher } from "@/components/widgets/locale/locale-switcher";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import {
   getAuthBrowserServerSnapshotString,
   getAuthBrowserSnapshotString,
@@ -20,6 +21,8 @@ const showMasterNav = process.env.NEXT_PUBLIC_SHOW_MASTER_NAV === "true";
 export function PortalHeader() {
   const pathname = usePathname();
   const router = useRouter();
+  const tCommon = useTranslations("common");
+  const tNav = useTranslations("dashboard.nav");
   const authRaw = useSyncExternalStore(
     subscribeAuthBrowserState,
     getAuthBrowserSnapshotString,
@@ -29,8 +32,8 @@ export function PortalHeader() {
   const hasSession = auth.status === "signedIn";
 
   const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
+    if (href === "/") return pathname === "/" || pathname === "";
+    return pathname === href || pathname.startsWith(`${href}/`);
   };
 
   const handleLogout = async () => {
@@ -55,15 +58,16 @@ export function PortalHeader() {
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-heading text-sm font-semibold uppercase tracking-[0.35em] text-foreground">
-              GDC Hub
+              {tCommon("brand.title")}
             </span>
             <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-              Резидентский портал
+              {tCommon("brand.subtitle")}
             </span>
           </div>
         </Link>
 
         <div className="flex items-center gap-1 sm:gap-2">
+          <LocaleSwitcher className="hidden sm:inline-flex" />
           <Link
             href="/profile"
             className="flex items-center gap-2 border border-transparent px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition hover:border-primary/40 hover:bg-primary/5 hover:text-foreground"
@@ -71,7 +75,7 @@ export function PortalHeader() {
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 text-[11px] font-bold text-primary">
               {auth.avatarLetter}
             </span>
-            <span className="hidden sm:inline">Профиль</span>
+            <span className="hidden sm:inline">{tCommon("header.profile")}</span>
           </Link>
 
           {showMasterNav ? (
@@ -79,7 +83,7 @@ export function PortalHeader() {
               href="/admin"
               className="border border-primary/60 bg-primary/15 px-3 py-2 text-[11px] font-bold uppercase tracking-widest text-primary transition hover:bg-primary hover:text-primary-foreground"
             >
-              Мастер
+              {tCommon("header.master")}
             </Link>
           ) : null}
 
@@ -89,14 +93,14 @@ export function PortalHeader() {
               onClick={() => void handleLogout()}
               className="border border-border px-3 py-2 text-[11px] uppercase tracking-wider text-muted-foreground transition hover:border-destructive/50 hover:text-destructive"
             >
-              Выйти
+              {tCommon("header.logout")}
             </button>
           ) : (
             <Link
               href="/auth"
               className="border border-primary bg-primary px-3 py-2 text-[11px] font-bold uppercase tracking-widest text-primary-foreground transition hover:bg-primary/90"
             >
-              Вход
+              {tCommon("header.login")}
             </Link>
           )}
         </div>
@@ -114,7 +118,7 @@ export function PortalHeader() {
                 : "border-transparent text-muted-foreground hover:border-muted-foreground/40 hover:text-foreground",
             )}
           >
-            {link.label}
+            {tNav(link.labelKey)}
           </Link>
         ))}
       </nav>

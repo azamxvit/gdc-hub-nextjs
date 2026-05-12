@@ -2,11 +2,11 @@ export const AUTH_LOGIN = "/auth";
 export const AUTH_REGISTER = "/auth/register";
 
 export const PORTAL_NAV = [
-  { href: "/", label: "Таверна" },
-  { href: "/leaderboard", label: "Зал славы" },
-  { href: "/quests", label: "Квесты" },
-  { href: "/shop", label: "Лавка" },
-  { href: "/inventory", label: "Инвентарь" },
-  { href: "/certificates", label: "Свитки" },
-  { href: "/notifications", label: "Почта" },
+  { href: "/", labelKey: "tavern" },
+  { href: "/leaderboard", labelKey: "leaderboard" },
+  { href: "/quests", labelKey: "quests" },
+  { href: "/shop", labelKey: "shop" },
+  { href: "/inventory", labelKey: "inventory" },
+  { href: "/certificates", labelKey: "certificates" },
+  { href: "/notifications", labelKey: "notifications" },
 ] as const;

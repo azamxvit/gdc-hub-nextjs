@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
-
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -14,22 +12,34 @@ import { Button } from "@/components/shared/ui/button";
 import { Label } from "@/components/shared/ui/label";
 import { AuthInputWithIcon } from "@/components/widgets/auth/auth-input-with-icon";
 import { AuthOauthDivider } from "@/components/widgets/auth/auth-oauth-divider";
+import { Link, useRouter } from "@/i18n/navigation";
 import { signInWithEmailPassword, signInWithGoogle, useAuthUrlError } from "@/lib/auth";
 import { AUTH_REGISTER } from "@/lib/navigation/routes";
 
-const loginSchema = z.object({
-  email: z.string().email("Некорректный email"),
-  password: z.string().min(1, "Введите пароль"),
-});
-
-type LoginValues = z.infer<typeof loginSchema>;
+type LoginValues = {
+  email: string;
+  password: string;
+};
 
 export function LoginFormWidget() {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations("auth.login");
+  const tOauth = useTranslations("auth.oauth");
+  const tErrors = useTranslations("errors");
   const [formError, setFormError] = useState<string | null>(null);
   const [googleLoading, setGoogleLoading] = useState(false);
 
   useAuthUrlError(setFormError);
+
+  const loginSchema = useMemo(
+    () =>
+      z.object({
+        email: z.string().email(tErrors("invalidEmail")),
+        password: z.string().min(1, tErrors("passwordRequired")),
+      }),
+    [tErrors],
+  );
 
   const {
     register,
@@ -40,6 +50,8 @@ export function LoginFormWidget() {
     defaultValues: { email: "", password: "" },
   });
 
+  const authBase = `/${locale}/auth`;
+
   const onSubmit = handleSubmit(async (values) => {
     setFormError(null);
     try {
@@ -47,7 +59,7 @@ export function LoginFormWidget() {
       router.push("/");
       router.refresh();
     } catch (e) {
-      setFormError(e instanceof Error ? e.message : "Не удалось войти");
+      setFormError(e instanceof Error ? e.message : tErrors("genericLogin"));
     }
   });
 
@@ -55,9 +67,12 @@ export function LoginFormWidget() {
     setFormError(null);
     setGoogleLoading(true);
     try {
-      await signInWithGoogle({ errorReturnPath: "/auth", successNext: "/" });
+      await signInWithGoogle({
+        errorReturnPath: authBase,
+        successNext: "/",
+      });
     } catch (e) {
-      setFormError(e instanceof Error ? e.message : "Не удалось войти через Google");
+      setFormError(e instanceof Error ? e.message : tErrors("genericGoogle"));
       setGoogleLoading(false);
     }
   };
@@ -66,20 +81,24 @@ export function LoginFormWidget() {
     <div className="space-y-8">
       <header className="space-y-2">
         <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground">
-          С возвращением
+          {t("title")}
         </h1>
-        <p className="text-sm text-muted-foreground">Введите данные, чтобы войти в аккаунт.</p>
+        <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </header>
 
       <AuthOauthDivider
-        label="или войти по email"
+        label={tOauth("dividerLogin")}
+        googleButtonLabel={tOauth("googleContinue")}
+        googleLoadingLabel={tOauth("googleLoading")}
+        googleTitle={tOauth("googleTitle")}
+        googleDisabledTitle={tOauth("googleDisabled")}
         onGoogle={handleGoogle}
         googleLoading={googleLoading}
       />
 
       <form className="space-y-5" onSubmit={onSubmit} noValidate>
         <div className="space-y-2">
-          <Label htmlFor="login-email">Email</Label>
+          <Label htmlFor="login-email">{t("emailLabel")}</Label>
           <AuthInputWithIcon
             id="login-email"
             icon={<Mail />}
@@ -95,9 +114,12 @@ export function LoginFormWidget() {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-2">
-            <Label htmlFor="login-password">Пароль</Label>
+            <Label htmlFor="login-password">{t("passwordLabel")}</Label>
             <span className="text-xs text-muted-foreground">
-              Забыли пароль? <span className="font-medium text-accent">скоро</span>
+              {t("forgotPrompt")}{" "}
+              <span className="neon-link-auth font-medium underline-offset-2">
+                {t("forgotSoon")}
+              </span>
             </span>
           </div>
           <AuthInputWithIcon
@@ -130,17 +152,17 @@ export function LoginFormWidget() {
           className="h-12 w-full rounded-lg bg-foreground text-background font-semibold tracking-wide hover:opacity-90"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Входим…" : "Войти"}
+          {isSubmitting ? t("submitting") : t("submit")}
         </Button>
       </form>
 
       <p className="text-center text-sm text-muted-foreground">
-        Нет аккаунта?{" "}
+        {t("noAccount")}{" "}
         <Link
           href={AUTH_REGISTER}
-          className="font-semibold text-accent underline-offset-4 hover:underline"
+          className="neon-link-auth font-semibold underline-offset-4 hover:underline"
         >
-          Регистрация
+          {t("registerLink")}
         </Link>
       </p>
     </div>

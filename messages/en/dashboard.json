@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "tavern": "Tavern",
+    "leaderboard": "Hall of fame",
+    "quests": "Quests",
+    "shop": "Shop",
+    "inventory": "Inventory",
+    "certificates": "Scrolls",
+    "notifications": "Mail"
+  },
+  "screens": {
+    "home": {
+      "tavernEyebrow": "Tavern",
+      "tavernTitle": "Residents feed",
+      "tavernDescription": "Portal micro-blog: posts, progress screenshots, and announcements. Content from FastAPI will appear here.",
+      "feedTitle": "The feed will come alive soon",
+      "feedBody": "We're moving posts and attachments from legacy gdc_frontend → Next.js. The API stays on FastAPI.",
+      "feedFooter": "Empty timeline — layout and navigation placeholder."
+    },
+    "profile": {
+      "module": "Profile",
+      "title": "Player card",
+      "description": "Nickname, avatar, portfolio, customization from inventory, and hidden full name for certificates."
+    },
+    "admin": {
+      "module": "Master",
+      "title": "Admin panel",
+      "description": "Moderation, quests, multi reward calculator, and role verification — migrating from legacy."
+    },
+    "notifications": {
+      "module": "Mail",
+      "title": "System inbox",
+      "description": "Logs of XP, coins, and scroll grants from the master calculator — with reason when provided."
+    },
+    "certificates": {
+      "module": "Knowledge scrolls",
+      "title": "Certificates",
+      "description": "Diploma gallery and PDF issuance from a template with full name and unique code."
+    },
+    "leaderboard": {
+      "module": "Hall of fame",
+      "title": "Global ranking",
+      "description": "Sort by level and XP — like publisher game clients."
+    },
+    "quests": {
+      "module": "Quests",
+      "title": "Events board",
+      "description": "Registration calendar, Completed / Not completed statuses, sync with the master table."
+    },
+    "inventory": {
+      "module": "Inventory",
+      "title": "Gear and showcase",
+      "description": "Equip frames and banners, display items in your achievements showcase."
+    },
+    "shop": {
+      "module": "Shop",
+      "title": "Coin store",
+      "description": "Frames, covers, collectibles, and master-class tickets — as in the spec."
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "brand": {
+    "title": "GDC Hub",
+    "subtitle": "Resident portal"
+  },
+  "header": {
+    "profile": "Profile",
+    "master": "Master",
+    "logout": "Log out",
+    "login": "Sign in"
+  },
+  "footer": {
+    "copyright": "© {year} GDC Hub"
+  },
+  "locale": {
+    "label": "Language",
+    "en": "English",
+    "kz": "Kazakh",
+    "ru": "Russian"
+  }
+}
